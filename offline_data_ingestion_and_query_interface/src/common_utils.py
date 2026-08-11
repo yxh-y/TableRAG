@@ -1,3 +1,4 @@
+import os
 import re
 import json
 import hashlib
@@ -12,8 +13,9 @@ sql_alchemy_helper = SQL_Alchemy_Helper(database_config)
 
 
 def transfer_name(original_name):
-    # 去除扩展名
-    name = original_name.split('.')[0]
+    # 去除扩展名（用 splitext 只去掉最后的 .xlsx/.xls，避免文件名中间的 "."
+    # 比如 "U.S." "F.C." 被 split('.')[0] 误截断导致大量文件撞名）
+    name = os.path.splitext(original_name)[0]
     
     # 替换非法字符为下划线
     name = re.sub(r'[^a-zA-Z0-9_]', '_', name)
